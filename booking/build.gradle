@@ -8,7 +8,7 @@ plugins {
     id 'jacoco'
 }
 
-group = 'com.ntnn.booking'
+group = 'com.ntnn.service'
 version = '1.0-SNAPSHOT'
 
 dependencyManagement {
@@ -23,12 +23,20 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2'
+    implementation 'org.postgresql:postgresql:42.6.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.1'
 
@@ -38,4 +46,29 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+openApi {
+    apiDocsUrl.set("http://localhost:8080/catalog-routing/v3/api-docs")
+    outputDir.set(file("$buildDir/generated/docs"))
+    outputFileName.set("api-definition.yml")
+    waitTimeInSeconds.set(30)
+}
+
+task componentTest(type: Test, dependsOn: ['testClasses']) {
+    useJUnitPlatform()
+    include 'component/**'
+}
+
+dockerCompose {
+    useComposeFiles = ["src/main/docker/docker-compose-dev.yml"]
+    dockerComposeStopTimeout = java.time.Duration.ofSeconds(120)
+}
+
+task startTestEnvironment() {
+    dependsOn += ["composeUp"]
+}
+
+task stopTestEnvironment {
+    dependsOn += ["composeDown"]
 }

@@ -1,20 +1,20 @@
 server:
-  port: 8888
+  port: 9191
 
 spring:
   application:
-    name: api-gateway-service
+    name: api-gateway
   cloud:
     gateway:
       routes:
         - id: bookingModule
           uri: lb://BOOKING
           predicates:
-            - Path=/booking/api/v2/booking/**
+            - Path=/hotel/booking/**
         - id: paymentModule
           uri: lb://PAYMENTS
           predicates:
-            - Path=/payments/api/v2/payments/**
+            - Path=/payment/**
 management:
   info:
     git:
