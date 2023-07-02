@@ -8,11 +8,11 @@ spring:
     gateway:
       routes:
         - id: bookingModule
-          uri: lb://BOOKING
+          uri: lb://BOOKING-SERVICE
           predicates:
             - Path=/hotel/booking/**
         - id: paymentModule
-          uri: lb://PAYMENTS
+          uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/payment/**
 management:

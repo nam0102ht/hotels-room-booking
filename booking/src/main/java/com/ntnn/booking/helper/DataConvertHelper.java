@@ -20,14 +20,15 @@ public class DataConvertHelper {
         String roomNumbers = "";
         ArrayList<String> lst = getRandomNumbers(bookingRequest.getNumOfRooms());
         for (String s : lst) {
-            roomNumbers = roomNumbers.concat(s + ",");
+            roomNumbers = String.join(",", String.valueOf(s), roomNumbers);
         }
-        removeLastChar(roomNumbers);
+        roomNumbers = removeLastChar(roomNumbers);
         BookingInfoEntity bookingInfo = new BookingInfoEntity();
         bookingInfo.setFromDate(convertStringToDate(bookingRequest.getFromDate()));
         bookingInfo.setToDate(convertStringToDate(bookingRequest.getToDate()));
         bookingInfo.setNumOfRooms(bookingRequest.getNumOfRooms());
         bookingInfo.setAadharNumber(bookingRequest.getAadharNumber());
+        bookingInfo.setRoomNumbers(roomNumbers);
         bookingInfo.setRoomPrice(calculatePrice(bookingRequest.getNumOfRooms(),
                 convertStringToDate(bookingRequest.getFromDate()),
                 convertStringToDate(bookingRequest.getToDate())));
