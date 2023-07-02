@@ -1,0 +1,28 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: api-gateway-service
+  cloud:
+    gateway:
+      routes:
+        - id: bookingModule
+          uri: lb://BOOKING
+          predicates:
+            - Path=/booking/api/v2/booking/**
+        - id: paymentModule
+          uri: lb://PAYMENTS
+          predicates:
+            - Path=/payments/api/v2/payments/**
+management:
+  info:
+    git:
+      mode: full
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
