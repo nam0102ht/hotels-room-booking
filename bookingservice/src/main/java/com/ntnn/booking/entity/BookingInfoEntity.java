@@ -1,5 +1,8 @@
 package com.ntnn.booking.entity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ntnn.booking.exception.TechnicalException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,4 +45,23 @@ public class BookingInfoEntity {
 
     @Column(name = "bookedOn")
     private Date bookOn;
+
+    @Override
+    public String toString() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            BookingInfoEntity bookingInfo = new BookingInfoEntity();
+            bookingInfo.setBookOn(this.bookOn);
+            bookingInfo.setToDate(this.toDate);
+            bookingInfo.setFromDate(this.fromDate);
+            bookingInfo.setAadharNumber(this.aadharNumber);
+            bookingInfo.setNumOfRooms(this.numOfRooms);
+            bookingInfo.setRoomPrice(this.roomPrice);
+            bookingInfo.setTransactionId(this.transactionId);
+            bookingInfo.setId(this.id);
+            return objectMapper.writeValueAsString(bookingInfo);
+        } catch (JsonProcessingException ex) {
+            throw new TechnicalException(ex.getMessage(), ex);
+        }
+    }
 }
